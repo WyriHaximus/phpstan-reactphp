@@ -1,0 +1,5 @@
+services:
+  -
+    class: WyriHaximus\React\PHPStan\Rules\UseNonBlockingImplementationsRule
+    tags:
+      - phpstan.rules.rule

@@ -1,30 +1,4 @@
-# ReactPHP Extension for PHPStan
-
-![Continuous Integration](https://github.com/WyriHaximus/phpstan-reactphp/workflows/Continuous%20Integration/badge.svg)
-[![Latest Stable Version](https://poser.pugx.org/WyriHaximus/phpstan-react/v/stable.png)](https://packagist.org/packages/WyriHaximus/phpstan-react)
-[![Total Downloads](https://poser.pugx.org/WyriHaximus/phpstan-react/downloads.png)](https://packagist.org/packages/WyriHaximus/phpstan-react)
-[![License](https://poser.pugx.org/WyriHaximus/phpstan-react/license.png)](https://packagist.org/packages/WyriHaximus/phpstan-react)
-
-# Install
-
-To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `^`.
-
-```
-composer require wyrihaximus/phpstan-react
-```
-
-# Usage
-
-Include the rules file from the root of this package to have PHPStan check your code for blocking functions:
-
-```neon
-includes:
-	- vendor/wyrihaximus/phpstan-react/phpstan-reactphp-rules.neon
-```
-
-# License
-
-The MIT License (MIT)
+MIT License
 
 Copyright (c) 2024 Cees-Jan Kiewiet
 
