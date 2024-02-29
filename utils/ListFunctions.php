@@ -7,14 +7,18 @@ namespace WyriHaximus\React\PHPStan\Utils;
 use DirectoryIterator;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\ParserFactory;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\ConstExprParser;
 use PHPStan\PhpDocParser\Parser\PhpDocParser;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
 
+use function count;
 use function current;
 use function file_get_contents;
+use function implode;
+use function is_array;
 use function is_file;
 use function property_exists;
 use function substr;
@@ -44,24 +48,46 @@ final class ListFunctions
                     continue;
                 }
 
-                $tokens     = new TokenIterator($lexer->tokenize(current($astNode->getComments())->getText()));
-                $phpDocNode = $phpDocParser->parse($tokens);
+                $function = substr($filesystemNode->getFilename(), 0, -4);
+                if (is_array($astNode->getComments()) && count($astNode->getComments()) > 0) {
+                    $tokens     = new TokenIterator($lexer->tokenize(current($astNode->getComments())->getText()));
+                    $phpDocNode = $phpDocParser->parse($tokens);
 
-                $function    = substr($filesystemNode->getFilename(), 0, -4);
-                $url         = current($phpDocNode->getTagsByName('@url'))->value->value;
-                $package     = current($phpDocNode->getTagsByName('@package'))->value->value;
-                $replacement = current($phpDocNode->getTagsByName('@replacement'))->value->value;
+                    $url         = implode(', ', [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@url'))]);
+                    $package     = implode(', ', [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@package'))]);
+                    $replacement = implode(', ', [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@replacement'))]);
+
+                    yield new Func(
+                        $function,
+                        $nodePath,
+                        $package,
+                        $replacement,
+                        $url,
+                        $function . ' blocks the event loop, use ' . $replacement . ' from ' . $package . ' instead. Please consult the documentation for more information: ' . $url,
+                        $astNode->getLine(),
+                    );
+
+                    continue;
+                }
 
                 yield new Func(
                     $function,
                     $nodePath,
-                    $package,
-                    $replacement,
-                    $url,
-                    $function . ' blocks the event loop, use ' . $replacement . ' from ' . $package . ' instead. Please consult the documentation for more information: ' . $url,
+                    null,
+                    null,
+                    null,
+                    $function . ' blocks the event loop, do not use it.',
                     $astNode->getLine(),
                 );
             }
+        }
+    }
+
+    /** @return iterable<string> */
+    private static function getValueValuesFromTag(PhpDocTagNode ...$tags): iterable
+    {
+        foreach ($tags as $tag) {
+            yield $tag->value->value;
         }
     }
 }
