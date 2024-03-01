@@ -15,7 +15,6 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use WyriHaximus\React\PHPStan\Utils\Func;
-use WyriHaximus\React\PHPStan\Utils\ListFunctions;
 
 use function dirname;
 use function file_get_contents;
@@ -25,7 +24,7 @@ use const DIRECTORY_SEPARATOR;
 
 final readonly class UseNonBlockingImplementationsRulePopulator
 {
-    public static function populate(): void
+    public static function populate(Func ...$funcs): void
     {
         $functionsRuleFile = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Rules' . DIRECTORY_SEPARATOR . 'UseNonBlockingImplementationsRule.php';
         $parser            = (new ParserFactory())->createForNewestSupportedVersion();
@@ -57,7 +56,7 @@ final readonly class UseNonBlockingImplementationsRulePopulator
                                                 new String_($function->name),
                                             );
                                         }
-                                    })(...ListFunctions::listAllBlockingFunctions()),
+                                    })(...$funcs),
                                 ], [
                                     'kind' => Array_::KIND_SHORT,
                                 ]),
