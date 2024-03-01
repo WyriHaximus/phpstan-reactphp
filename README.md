@@ -22,6 +22,239 @@ includes:
 	- vendor/wyrihaximus/phpstan-react/phpstan-reactphp-rules.neon
 ```
 
+# Functions
+
+## fclose
+
+
+## file_exists
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\AdapterInterface::detect
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect](https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect)
+
+
+## file_get_contents
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\Node\FileInterface::getContents
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents](https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents)
+
+
+## file_put_contents
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\Node\FileInterface::putContents
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#putcontents](https://github.com/reactphp/filesystem/?tab=readme-ov-file#putcontents)
+
+
+## fopen
+
+Relevant package(s):
+
+ * react/filesystem
+ * react/socket
+
+Suggested replacement(s):
+
+ * React\Filesystem\Node\FileInterface::getContents
+ * React\Socket\Connector::connect
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents](https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents)
+ * [https://reactphp.org/socket/#connect](https://reactphp.org/socket/#connect)
+
+
+## fread
+
+Relevant package(s):
+
+ * react/stream
+
+Suggested replacement(s):
+
+ * React\Stream\ReadableStreamInterface::on
+
+Documentation:
+
+ * [https://reactphp.org/stream/#data-event](https://reactphp.org/stream/#data-event)
+
+
+## fwrite
+
+Relevant package(s):
+
+ * react/stream
+
+Suggested replacement(s):
+
+ * React\Stream\WritableStreamInterface::write
+
+Documentation:
+
+ * [https://reactphp.org/stream/#write](https://reactphp.org/stream/#write)
+
+
+## gethostbyname
+
+Relevant package(s):
+
+ * react/dns
+
+Suggested replacement(s):
+
+ * React\Dns\ResolverInterface::resolve
+
+Documentation:
+
+ * [https://reactphp.org/dns/#resolve](https://reactphp.org/dns/#resolve)
+
+
+## is_dir
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\AdapterInterface::detect
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect](https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect)
+
+
+## is_file
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\AdapterInterface::detect
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect](https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect)
+
+
+## is_link
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\AdapterInterface::detect
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect](https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect)
+
+
+## mkdir
+
+Relevant package(s):
+
+ * react/filesystem
+
+Suggested replacement(s):
+
+ * React\Filesystem\Node\NotExistInterface::createDirectory
+
+Documentation:
+
+ * [https://github.com/reactphp/filesystem/?tab=readme-ov-file#createdirectory](https://github.com/reactphp/filesystem/?tab=readme-ov-file#createdirectory)
+
+
+## sleep
+
+Relevant package(s):
+
+ * react/promise-timer
+
+Suggested replacement(s):
+
+ * React\Promise\Timer\sleep
+
+Documentation:
+
+ * [https://reactphp.org/promise-timer/#sleep](https://reactphp.org/promise-timer/#sleep)
+
+
+## time_nanosleep
+
+Relevant package(s):
+
+ * react/promise-timer
+
+Suggested replacement(s):
+
+ * React\Promise\Timer\sleep
+
+Documentation:
+
+ * [https://reactphp.org/promise-timer/#sleep](https://reactphp.org/promise-timer/#sleep)
+
+
+## time_sleep_until
+
+Relevant package(s):
+
+ * react/promise-timer
+
+Suggested replacement(s):
+
+ * React\Promise\Timer\sleep
+
+Documentation:
+
+ * [https://reactphp.org/promise-timer/#sleep](https://reactphp.org/promise-timer/#sleep)
+
+
+## usleep
+
+Relevant package(s):
+
+ * react/promise-timer
+
+Suggested replacement(s):
+
+ * React\Promise\Timer\sleep
+
+Documentation:
+
+ * [https://reactphp.org/promise-timer/#sleep](https://reactphp.org/promise-timer/#sleep)
+
+
 # License
 
 The MIT License (MIT)

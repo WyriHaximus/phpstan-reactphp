@@ -53,9 +53,9 @@ final class ListFunctions
                     $tokens     = new TokenIterator($lexer->tokenize(current($astNode->getComments())->getText()));
                     $phpDocNode = $phpDocParser->parse($tokens);
 
-                    $url         = implode(', ', [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@url'))]);
-                    $package     = implode(', ', [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@package'))]);
-                    $replacement = implode(', ', [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@replacement'))]);
+                    $url         = [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@url'))];
+                    $package     = [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@package'))];
+                    $replacement = [...self::getValueValuesFromTag(...$phpDocNode->getTagsByName('@replacement'))];
 
                     yield new Func(
                         $function,
@@ -63,7 +63,7 @@ final class ListFunctions
                         $package,
                         $replacement,
                         $url,
-                        $function . ' blocks the event loop, use ' . $replacement . ' from ' . $package . ' instead. Please consult the documentation for more information: ' . $url,
+                        $function . ' blocks the event loop, use ' . implode(', ', $replacement) . ' from ' . implode(', ', $package) . ' instead. Please consult the documentation for more information: ' . implode(', ', $url),
                         $astNode->getLine(),
                     );
 
@@ -73,9 +73,9 @@ final class ListFunctions
                 yield new Func(
                     $function,
                     $nodePath,
-                    null,
-                    null,
-                    null,
+                    [],
+                    [],
+                    [],
                     $function . ' blocks the event loop, do not use it.',
                     $astNode->getLine(),
                 );
