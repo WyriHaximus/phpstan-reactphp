@@ -19,8 +19,10 @@ use WyriHaximus\React\PHPStan\Utils\Func;
 use function dirname;
 use function file_get_contents;
 use function Safe\file_put_contents;
+use function str_replace;
 
 use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 final readonly class UseNonBlockingImplementationsRulePopulator
 {
@@ -69,6 +71,15 @@ final readonly class UseNonBlockingImplementationsRulePopulator
             }
         }
 
-        file_put_contents($functionsRuleFile, (new Standard())->prettyPrintFile($ast));
+        file_put_contents($functionsRuleFile, self::postProcessing((new Standard())->prettyPrintFile($ast)));
+    }
+
+    private static function postProcessing(string $php): string
+    {
+        $php = str_replace('private const FUNCTION_LIST = [\'', 'private const FUNCTION_LIST = [' . PHP_EOL . '\'', $php);
+        $php = str_replace('\']', '\'' . PHP_EOL . ']', $php);
+        $php = str_replace('\', \'', '\',' . PHP_EOL . '\'', $php);
+
+        return $php;
     }
 }
