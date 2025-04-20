@@ -5,4 +5,5 @@ parameters:
 				- PHPStan\Testing\RuleTestCase
 
 includes:
+	- ../../extension.neon
 	- ../../vendor/wyrihaximus/test-utilities/rules.neon
