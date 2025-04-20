@@ -11,7 +11,6 @@ use function explode;
 use function file_get_contents;
 use function file_put_contents;
 use function implode;
-use function usort;
 
 use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
@@ -23,7 +22,6 @@ final class Readme
 
     public static function update(Func ...$funcs): void
     {
-        usort($funcs, static fn (Func $left, Func $right): int => $left->name <=> $right->name);
         $readmePath            = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'README.md';
         $readme                = file_get_contents($readmePath);
         [$beforeFunctionList]  = explode(self::HEADER_FUNCTIONS, $readme);

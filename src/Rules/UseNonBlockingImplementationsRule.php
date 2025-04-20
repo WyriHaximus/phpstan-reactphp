@@ -18,22 +18,22 @@ use function array_key_exists;
 final readonly class UseNonBlockingImplementationsRule implements Rule
 {
     private const FUNCTION_LIST = [
-        'time_sleep_until' => 'time_sleep_until blocks the event loop, use React\\Promise\\Timer\\sleep from react/promise-timer instead. Please consult the documentation for more information: https://reactphp.org/promise-timer/#sleep',
-        'fwrite' => 'fwrite blocks the event loop, use React\\Stream\\WritableStreamInterface::write from react/stream instead. Please consult the documentation for more information: https://reactphp.org/stream/#write',
-        'is_link' => 'is_link blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
-        'gethostbyname' => 'gethostbyname blocks the event loop, use React\\Dns\\ResolverInterface::resolve from react/dns instead. Please consult the documentation for more information: https://reactphp.org/dns/#resolve',
-        'is_file' => 'is_file blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
+        'fclose' => 'fclose blocks the event loop, do not use it.',
+        'file_exists' => 'file_exists blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
+        'file_get_contents' => 'file_get_contents blocks the event loop, use React\\Filesystem\\Node\\FileInterface::getContents from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents',
         'file_put_contents' => 'file_put_contents blocks the event loop, use React\\Filesystem\\Node\\FileInterface::putContents from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#putcontents',
         'fopen' => 'fopen blocks the event loop, use React\\Filesystem\\Node\\FileInterface::getContents, React\\Socket\\Connector::connect from react/filesystem, react/socket instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents, https://reactphp.org/socket/#connect',
-        'fclose' => 'fclose blocks the event loop, do not use it.',
-        'is_dir' => 'is_dir blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
-        'file_exists' => 'file_exists blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
-        'sleep' => 'sleep blocks the event loop, use React\\Promise\\Timer\\sleep from react/promise-timer instead. Please consult the documentation for more information: https://reactphp.org/promise-timer/#sleep',
-        'mkdir' => 'mkdir blocks the event loop, use React\\Filesystem\\Node\\NotExistInterface::createDirectory from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#createdirectory',
         'fread' => 'fread blocks the event loop, use React\\Stream\\ReadableStreamInterface::on from react/stream instead. Please consult the documentation for more information: https://reactphp.org/stream/#data-event',
+        'fwrite' => 'fwrite blocks the event loop, use React\\Stream\\WritableStreamInterface::write from react/stream instead. Please consult the documentation for more information: https://reactphp.org/stream/#write',
+        'gethostbyname' => 'gethostbyname blocks the event loop, use React\\Dns\\ResolverInterface::resolve from react/dns instead. Please consult the documentation for more information: https://reactphp.org/dns/#resolve',
+        'is_dir' => 'is_dir blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
+        'is_file' => 'is_file blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
+        'is_link' => 'is_link blocks the event loop, use React\\Filesystem\\AdapterInterface::detect from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#detect',
+        'mkdir' => 'mkdir blocks the event loop, use React\\Filesystem\\Node\\NotExistInterface::createDirectory from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#createdirectory',
+        'sleep' => 'sleep blocks the event loop, use React\\Promise\\Timer\\sleep from react/promise-timer instead. Please consult the documentation for more information: https://reactphp.org/promise-timer/#sleep',
         'time_nanosleep' => 'time_nanosleep blocks the event loop, use React\\Promise\\Timer\\sleep from react/promise-timer instead. Please consult the documentation for more information: https://reactphp.org/promise-timer/#sleep',
+        'time_sleep_until' => 'time_sleep_until blocks the event loop, use React\\Promise\\Timer\\sleep from react/promise-timer instead. Please consult the documentation for more information: https://reactphp.org/promise-timer/#sleep',
         'usleep' => 'usleep blocks the event loop, use React\\Promise\\Timer\\sleep from react/promise-timer instead. Please consult the documentation for more information: https://reactphp.org/promise-timer/#sleep',
-        'file_get_contents' => 'file_get_contents blocks the event loop, use React\\Filesystem\\Node\\FileInterface::getContents from react/filesystem instead. Please consult the documentation for more information: https://github.com/reactphp/filesystem/?tab=readme-ov-file#getcontents',
     ];
 
     public function getNodeType(): string
