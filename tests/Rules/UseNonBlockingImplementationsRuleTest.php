@@ -6,6 +6,7 @@ namespace WyriHaximus\Tests\React\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use WyriHaximus\React\PHPStan\Rules\UseNonBlockingImplementationsRule;
 use WyriHaximus\React\PHPStan\Utils\Func;
 use WyriHaximus\React\PHPStan\Utils\ListFunctions;
@@ -19,14 +20,14 @@ final class UseNonBlockingImplementationsRuleTest extends RuleTestCase
     }
 
     /** @return iterable<array<Func>> */
-    public function listAllTheFunctions(): iterable
+    public static function listAllTheFunctions(): iterable
     {
         foreach (ListFunctions::listAllBlockingFunctions() as $function) {
             yield $function->name => [$function];
         }
     }
 
-    /** @dataProvider listAllTheFunctions */
+    #[DataProvider('listAllTheFunctions')]
     public function testAllTheFunctions(Func $func): void
     {
         $this->analyse([$func->file], [

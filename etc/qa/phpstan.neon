@@ -6,4 +6,3 @@ parameters:
 
 includes:
 	- ../../extension.neon
-	- ../../vendor/wyrihaximus/test-utilities/rules.neon

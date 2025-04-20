@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace WyriHaximus\React\PHPStan\Utils\Rules;
 
+use Jawira\CaseConverter\Convert;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
-use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassConst;
@@ -18,6 +18,7 @@ use WyriHaximus\React\PHPStan\Utils\Func;
 
 use function dirname;
 use function file_get_contents;
+use function implode;
 use function Safe\file_put_contents;
 use function str_replace;
 
@@ -49,12 +50,31 @@ final readonly class UseNonBlockingImplementationsRulePopulator
                     foreach ($subStmt->consts as $k => $const) {
                         if ($const->name->toString() === 'FUNCTION_LIST') {
                             $const = new Const_(
-                                new Name('FUNCTION_LIST'),
+                                'FUNCTION_LIST',
                                 new Array_([
                                     ...(static function (Func ...$functions): iterable {
                                         foreach ($functions as $function) {
                                             yield new ArrayItem(
-                                                new String_($function->error),
+                                                new Array_([
+                                                    new ArrayItem(
+                                                        new String_($function->name),
+                                                        new String_('name'),
+                                                    ),
+                                                    new ArrayItem(
+                                                        new String_('wyrihaximus.reactphp.blocking.function.' . (new Convert($function->name))->toCamel()),
+                                                        new String_('identifier'),
+                                                    ),
+                                                    new ArrayItem(
+                                                        new String_($function->error),
+                                                        new String_('message'),
+                                                    ),
+                                                    new ArrayItem(
+                                                        new String_('Please consult the documentation for more information: ' . implode(', ', $function->url)),
+                                                        new String_('tip'),
+                                                    ),
+                                                ], [
+                                                    'kind' => Array_::KIND_SHORT,
+                                                ]),
                                                 new String_($function->name),
                                             );
                                         }
