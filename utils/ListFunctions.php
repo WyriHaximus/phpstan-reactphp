@@ -13,6 +13,7 @@ use PHPStan\PhpDocParser\Parser\ConstExprParser;
 use PHPStan\PhpDocParser\Parser\PhpDocParser;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
+use PHPStan\PhpDocParser\ParserConfig;
 
 use function count;
 use function current;
@@ -30,10 +31,11 @@ final class ListFunctions
     /** @return iterable<Func> */
     public static function listAllBlockingFunctions(): iterable
     {
-        $lexer           = new Lexer();
-        $constExprParser = new ConstExprParser();
-        $typeParser      = new TypeParser($constExprParser);
-        $phpDocParser    = new PhpDocParser($typeParser, $constExprParser);
+        $config          = new ParserConfig(usedAttributes: []);
+        $lexer           = new Lexer($config);
+        $constExprParser = new ConstExprParser($config);
+        $typeParser      = new TypeParser($config, $constExprParser);
+        $phpDocParser    = new PhpDocParser($config, $typeParser, $constExprParser);
         $parser          = (new ParserFactory())->createForNewestSupportedVersion();
         $root            = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR;
         foreach (new DirectoryIterator($root) as $filesystemNode) {
@@ -63,7 +65,7 @@ final class ListFunctions
                         $package,
                         $replacement,
                         $url,
-                        $function . ' blocks the event loop, use ' . implode(', ', $replacement) . ' from ' . implode(', ', $package) . ' instead. Please consult the documentation for more information: ' . implode(', ', $url),
+                        $function . ' blocks the event loop, use ' . implode(', ', $replacement) . ' from ' . implode(', ', $package) . ' instead.',
                         $astNode->getLine(),
                     );
 
