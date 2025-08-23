@@ -17,8 +17,8 @@ use const PHP_EOL;
 
 final class Readme
 {
-    private const HEADER_FUNCTIONS = '# Functions';
-    private const HEADER_LICENSE   = '# License';
+    private const string HEADER_FUNCTIONS = '# Functions';
+    private const string HEADER_LICENSE   = '# License';
 
     public static function update(Func ...$funcs): void
     {

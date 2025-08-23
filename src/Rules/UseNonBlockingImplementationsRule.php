@@ -18,7 +18,7 @@ use function array_key_exists;
  */
 final readonly class UseNonBlockingImplementationsRule implements Rule
 {
-    private const FUNCTION_LIST = [
+    private const array FUNCTION_LIST = [
         'fclose' => [
             'name' => 'fclose',
             'identifier' => 'wyrihaximus.reactphp.blocking.function.fclose',
