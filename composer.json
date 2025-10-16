@@ -9,7 +9,7 @@
     "jawira/case-converter": "^3.6",
     "nikic/php-parser": "^5.6.1",
     "phpstan/phpdoc-parser": "^2.2.0",
-    "wyrihaximus/makefiles": "^0.7.5",
+    "wyrihaximus/makefiles": "^0.7.10",
     "wyrihaximus/test-utilities": "^8.5.0"
   },
   "autoload": {
