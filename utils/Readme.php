@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WyriHaximus\React\PHPStan\Utils;
 
+use RuntimeException;
+
 use function array_map;
 use function count;
 use function dirname;
@@ -11,6 +13,7 @@ use function explode;
 use function file_get_contents;
 use function file_put_contents;
 use function implode;
+use function is_string;
 
 use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
@@ -22,11 +25,16 @@ final class Readme
 
     public static function update(Func ...$funcs): void
     {
-        $readmePath            = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'README.md';
-        $readme                = file_get_contents($readmePath);
+        $readmePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'README.md';
+        $readme     = file_get_contents($readmePath); /** @phpstan-ignore wyrihaximus.reactphp.blocking.function.fileGetContents */
+        if (! is_string($readme)) {
+            throw new RuntimeException('Unable to read README');
+        }
+
         [$beforeFunctionList]  = explode(self::HEADER_FUNCTIONS, $readme);
         [, $afterFunctionList] = explode(self::HEADER_LICENSE, $readme);
 
+        /** @phpstan-ignore wyrihaximus.reactphp.blocking.function.filePutContents */
         file_put_contents($readmePath, implode('', [
             $beforeFunctionList,
             self::HEADER_FUNCTIONS,

@@ -1,8 +1,28 @@
 parameters:
+	level: max
+	paths:
+		- ../../etc
+		- ../../src
+		- ../../tests
+		- ../../utils
+	excludePaths:
+		- ../../utils/data/*
 	ergebnis:
 		noExtends:
 			classesAllowedToBeExtended:
 				- PHPStan\Testing\RuleTestCase
-
+	ignoreErrors:
+		-
+			identifier: shipmonk.checkedExceptionInYieldingMethod
+			path: ../../utils/ListFunctions.php
+			count: 1
+		-
+			identifier: shipmonk.checkedExceptionInYieldingMethod
+			path: ../../utils/ListFunctions.php
+			count: 2
+		-
+			identifier: shipmonk.checkedExceptionInYieldingMethod
+			path: ../../utils/Rules/UseNonBlockingImplementationsRulePopulator.php
+			count: 2
 includes:
 	- ../../extension.neon

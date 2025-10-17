@@ -14,13 +14,14 @@ use PHPStan\PhpDocParser\Parser\PhpDocParser;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
 use PHPStan\PhpDocParser\ParserConfig;
+use RuntimeException;
 
 use function count;
 use function current;
 use function file_get_contents;
 use function implode;
-use function is_array;
 use function is_file;
+use function is_string;
 use function property_exists;
 use function substr;
 
@@ -36,22 +37,31 @@ final class ListFunctions
         $constExprParser = new ConstExprParser($config);
         $typeParser      = new TypeParser($config, $constExprParser);
         $phpDocParser    = new PhpDocParser($config, $typeParser, $constExprParser);
-        $parser          = (new ParserFactory())->createForNewestSupportedVersion();
+        $parser          = new ParserFactory()->createForNewestSupportedVersion();
         $root            = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR;
         foreach (new DirectoryIterator($root) as $filesystemNode) {
             $nodePath = $root . $filesystemNode->getFilename();
-            if (! is_file($nodePath)) {
+            if (! is_file($nodePath)) {/** @phpstan-ignore wyrihaximus.reactphp.blocking.function.isFile */
                 continue;
             }
 
-            $ast = $parser->parse(file_get_contents($nodePath));
+            $nodePathFileContents = file_get_contents($nodePath); /** @phpstan-ignore wyrihaximus.reactphp.blocking.function.fileGetContents */
+            if (! is_string($nodePathFileContents)) {
+                throw new RuntimeException('Unable to read: ' . $nodePath);
+            }
+
+            $ast = $parser->parse($nodePathFileContents);
+            if ($ast === null) {
+                throw new RuntimeException('Unable to parse: ' . $nodePath);
+            }
+
             foreach ($ast as $astNode) {
                 if (! property_exists($astNode, 'expr') || ! ($astNode->expr instanceof FuncCall)) {
                     continue;
                 }
 
                 $function = substr($filesystemNode->getFilename(), 0, -4);
-                if (is_array($astNode->getComments()) && count($astNode->getComments()) > 0) {
+                if (count($astNode->getComments()) > 0) {
                     $tokens     = new TokenIterator($lexer->tokenize(current($astNode->getComments())->getText()));
                     $phpDocNode = $phpDocParser->parse($tokens);
 
@@ -66,7 +76,7 @@ final class ListFunctions
                         $replacement,
                         $url,
                         $function . ' blocks the event loop, use ' . implode(', ', $replacement) . ' from ' . implode(', ', $package) . ' instead.',
-                        $astNode->getLine(),
+                        $astNode->getStartLine(),
                     );
 
                     continue;
@@ -79,7 +89,7 @@ final class ListFunctions
                     [],
                     [],
                     $function . ' blocks the event loop, do not use it.',
-                    $astNode->getLine(),
+                    $astNode->getStartLine(),
                 );
             }
         }
@@ -89,6 +99,7 @@ final class ListFunctions
     private static function getValueValuesFromTag(PhpDocTagNode ...$tags): iterable
     {
         foreach ($tags as $tag) {
+            /** @phpstan-ignore-next-line */
             yield $tag->value->value;
         }
     }
