@@ -15,6 +15,8 @@ composer require wyrihaximus/phpstan-react
 
 # Usage
 
+The rules in this package are automatically loaded by PHPStan when `phpstan/extension-installer` is installed.
+
 Include the rules file from the root of this package to have PHPStan check your code for blocking functions:
 
 ```neon
