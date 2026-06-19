@@ -19,7 +19,7 @@ Include the rules file from the root of this package to have PHPStan check your 
 
 ```neon
 includes:
-	- vendor/wyrihaximus/phpstan-react/phpstan-reactphp-rules.neon
+	- vendor/wyrihaximus/phpstan-react/extension.neon
 ```
 
 # Functions
