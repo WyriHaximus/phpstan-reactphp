@@ -19,9 +19,9 @@ use WyriHaximus\React\PHPStan\Utils\Func;
 
 use function dirname;
 use function file_get_contents;
+use function file_put_contents;
 use function implode;
 use function is_string;
-use function Safe\file_put_contents;
 use function str_replace;
 
 use const DIRECTORY_SEPARATOR;
@@ -76,7 +76,7 @@ final readonly class UseNonBlockingImplementationsRulePopulator
             }
         }
 
-        file_put_contents($functionsRuleFile, self::postProcessing(new Standard()->prettyPrintFile($ast)));
+        file_put_contents($functionsRuleFile, self::postProcessing(new Standard()->prettyPrintFile($ast))); /** @phpstan-ignore wyrihaximus.reactphp.blocking.function.filePutContents */
     }
 
     /** @return iterable<ArrayItem> */
