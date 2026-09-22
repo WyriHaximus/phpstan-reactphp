@@ -3,12 +3,13 @@
   "description": "\ud83d\udc4e ReactPHP extension for PHPStan",
   "license": "MIT",
   "require": {
-    "php": "^8.4"
+    "php": "^8.4",
+    "nikic/php-parser": "^5.6.1"
   },
   "require-dev": {
     "jawira/case-converter": "^3.6",
-    "nikic/php-parser": "^5.6.1",
     "phpstan/phpdoc-parser": "^2.2.0",
+    "react/event-loop": "^1.6",
     "wyrihaximus/makefiles": "^0.14.8",
     "wyrihaximus/test-utilities": "^14.3.0"
   },

@@ -3,8 +3,8 @@
     "null", "true", "false",
     "static", "self", "parent",
     "array", "string", "int", "float", "bool", "iterable", "callable", "void", "object", "mixed",
-    "PhpParser\\Node", "PhpParser\\Node\\Expr\\FuncCall", "PhpParser\\Node\\Name",
-    "PHPStan\\Analyser\\Scope", "PHPStan\\Rules\\Rule", "PHPStan\\Rules\\RuleErrorBuilder"
+    "PHPStan\\Analyser\\Scope", "PHPStan\\Rules\\Rule", "PHPStan\\Rules\\RuleErrorBuilder",
+    "PHPStan\\Type\\ObjectType"
   ],
   "php-core-extensions" : [
     "Core",
