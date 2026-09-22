@@ -17,7 +17,7 @@ composer require wyrihaximus/phpstan-react
 
 The rules in this package are automatically loaded by PHPStan when `phpstan/extension-installer` is installed.
 
-Include the rules file from the root of this package to have PHPStan check your code for blocking functions:
+Include the rules file from the root of this package to have PHPStan check your code for blocking functions and `Loop::get()` misuse:
 
 ```neon
 includes:
@@ -255,6 +255,19 @@ Suggested replacement(s):
 Documentation:
 
  * [https://reactphp.org/promise-timer/#sleep](https://reactphp.org/promise-timer/#sleep)
+
+
+# Event loop
+
+Use the static methods on [`React\EventLoop\Loop`](https://github.com/reactphp/event-loop) instead of calling loop API methods through [`Loop::get()`](https://reactphp.org/event-loop/#loopget).
+
+See the [event loop documentation](https://reactphp.org/event-loop/) and the [`react/event-loop`](https://github.com/reactphp/event-loop) package.
+
+## `Loop::get()` method calls
+
+PHPStan reports when you invoke loop API methods through `Loop::get()`, for example `Loop::get()->addTimer(...)`. Use the matching static proxy on `Loop` instead, for example `Loop::addTimer(...)`.
+
+Error identifiers use the prefix `wyrihaximus.reactphp.eventLoop.staticProxy.`.
 
 
 # License
