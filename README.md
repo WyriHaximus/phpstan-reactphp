@@ -275,6 +275,12 @@ PHPStan reports when you invoke loop API methods on a value typed as `React\Even
 
 Error identifiers use the prefix `wyrihaximus.reactphp.eventLoop.instance.`.
 
+## Passing loop instances
+
+PHPStan reports when you pass a value typed as `React\EventLoop\LoopInterface` into any call, for example `acceptLoop(Loop::get())` or `new Service($loop)`. Do not inject or forward the loop; use the static proxies on `Loop` at the call site that needs the event loop API.
+
+Error identifier: `wyrihaximus.reactphp.eventLoop.passLoopInterface`.
+
 
 # License
 
