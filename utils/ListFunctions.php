@@ -38,7 +38,7 @@ final class ListFunctions
         $typeParser      = new TypeParser($config, $constExprParser);
         $phpDocParser    = new PhpDocParser($config, $typeParser, $constExprParser);
         $parser          = new ParserFactory()->createForNewestSupportedVersion();
-        $root            = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR;
+        $root            = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR;
         foreach (new DirectoryIterator($root) as $filesystemNode) {
             $nodePath = $root . $filesystemNode->getFilename();
             if (! is_file($nodePath)) {/** @phpstan-ignore wyrihaximus.reactphp.blocking.function.isFile */
