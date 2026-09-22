@@ -11,6 +11,8 @@ final readonly class LoopMethod
         public string $file,
         public string $staticProxyError,
         public int $staticProxyLine,
+        public string $instanceError,
+        public int $instanceLine,
         public string $tip,
     ) {
     }

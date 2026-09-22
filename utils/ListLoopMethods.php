@@ -109,6 +109,8 @@ final class ListLoopMethods
             $path,
             'Loop::get()->' . $name . '() goes through the loop instance' . $suggestion,
             $staticProxyLine,
+            'Calling ' . $name . ' on a loop instance is prohibited' . $suggestion,
+            $instanceLine,
             'Please consult the documentation for more information: ' . implode(', ', $url),
         );
     }
