@@ -31,12 +31,19 @@ final readonly class EventLoopRulesPopulator
 {
     private const string CONSTANT = 'METHOD_LIST';
 
-    public static function populateStaticProxies(LoopMethod ...$methods): void
+    public static function populate(LoopMethod ...$methods): void
     {
         self::populateRule(
             'UseLoopStaticProxiesRule',
             'wyrihaximus.reactphp.eventLoop.staticProxy.',
             static fn (LoopMethod $method): string => $method->staticProxyError,
+            ...$methods,
+        );
+
+        self::populateRule(
+            'DoNotUseLoopInstancesRule',
+            'wyrihaximus.reactphp.eventLoop.instance.',
+            static fn (LoopMethod $method): string => $method->instanceError,
             ...$methods,
         );
     }

@@ -17,7 +17,7 @@ composer require wyrihaximus/phpstan-react
 
 The rules in this package are automatically loaded by PHPStan when `phpstan/extension-installer` is installed.
 
-Include the rules file from the root of this package to have PHPStan check your code for blocking functions and `Loop::get()` misuse:
+Include the rules file from the root of this package to have PHPStan check your code for blocking functions and event loop misuse:
 
 ```neon
 includes:
@@ -259,7 +259,7 @@ Documentation:
 
 # Event loop
 
-Use the static methods on [`React\EventLoop\Loop`](https://github.com/reactphp/event-loop) instead of calling loop API methods through [`Loop::get()`](https://reactphp.org/event-loop/#loopget).
+Do not hand the loop around. Use the static proxies on [`React\EventLoop\Loop`](https://github.com/reactphp/event-loop) instead of calling API methods on [`Loop::get()`](https://reactphp.org/event-loop/#loopget) or on any other [`LoopInterface`](https://github.com/reactphp/event-loop/blob/1.x/src/LoopInterface.php) instance.
 
 See the [event loop documentation](https://reactphp.org/event-loop/) and the [`react/event-loop`](https://github.com/reactphp/event-loop) package.
 
@@ -268,6 +268,12 @@ See the [event loop documentation](https://reactphp.org/event-loop/) and the [`r
 PHPStan reports when you invoke loop API methods through `Loop::get()`, for example `Loop::get()->addTimer(...)`. Use the matching static proxy on `Loop` instead, for example `Loop::addTimer(...)`.
 
 Error identifiers use the prefix `wyrihaximus.reactphp.eventLoop.staticProxy.`.
+
+## Loop instance method calls
+
+PHPStan reports when you invoke loop API methods on a value typed as `React\EventLoop\LoopInterface`, for example `$loop->addTimer(...)` where `$loop` was injected or returned from a factory. Use the matching static proxy on `Loop` instead.
+
+Error identifiers use the prefix `wyrihaximus.reactphp.eventLoop.instance.`.
 
 
 # License

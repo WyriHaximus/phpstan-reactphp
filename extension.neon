@@ -7,3 +7,7 @@ services:
     class: WyriHaximus\React\PHPStan\Rules\UseLoopStaticProxiesRule
     tags:
       - phpstan.rules.rule
+  -
+    class: WyriHaximus\React\PHPStan\Rules\DoNotUseLoopInstancesRule
+    tags:
+      - phpstan.rules.rule

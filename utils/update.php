@@ -20,4 +20,4 @@ uasort($loopMethods, static fn (LoopMethod $left, LoopMethod $right): int => $le
 
 Readme::update(...$funcs);
 UseNonBlockingImplementationsRulePopulator::populate(...$funcs);
-EventLoopRulesPopulator::populateStaticProxies(...$loopMethods);
+EventLoopRulesPopulator::populate(...$loopMethods);
