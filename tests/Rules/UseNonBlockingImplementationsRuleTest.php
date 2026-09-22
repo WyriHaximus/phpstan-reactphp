@@ -7,9 +7,14 @@ namespace WyriHaximus\Tests\React\Rules;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use WyriHaximus\React\PHPStan\Rules\UseNonBlockingImplementationsRule;
 use WyriHaximus\React\PHPStan\Utils\Func;
 use WyriHaximus\React\PHPStan\Utils\ListFunctions;
+
+use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 /** @template-extends RuleTestCase<UseNonBlockingImplementationsRule> */
 final class UseNonBlockingImplementationsRuleTest extends RuleTestCase
@@ -28,7 +33,8 @@ final class UseNonBlockingImplementationsRuleTest extends RuleTestCase
     }
 
     #[DataProvider('listAllTheFunctions')]
-    public function testAllTheFunctions(Func $func): void
+    #[Test]
+    public function allTheFunctions(Func $func): void
     {
         $this->analyse([$func->file], [
             [
@@ -36,5 +42,13 @@ final class UseNonBlockingImplementationsRuleTest extends RuleTestCase
                 $func->line,
             ],
         ]);
+    }
+
+    #[Test]
+    public function testCallsThatDoNotBlock(): void
+    {
+        $this->analyse([
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'utils' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR . 'edge-cases' . DIRECTORY_SEPARATOR . 'not-reported.php',
+        ], []);
     }
 }

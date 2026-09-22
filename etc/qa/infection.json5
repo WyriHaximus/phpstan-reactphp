@@ -1,5 +1,5 @@
 {
-    "timeout": 300,
+    "timeout": 120,
     "source": {
         "directories": [
             "../../src"
@@ -12,21 +12,10 @@
         "perMutator": "../../var/infection-per-mutator.md",
         "github": true
     },
+    "minMsi": 100,
+    "minCoveredMsi": 100,
+    "ignoreMsiWithNoMutations": true,
     "mutators": {
-        "@default": true,
-        "CastInt": false,
-        "Continue_": false,
-        "MethodCallRemoval": false,
-        "LogicalNot": false,
-        "LessThanOrEqualTo": false,
-        "LessThanOrEqualToNegotiation": false,
-        "GreaterThanOrEqualTo": false,
-        "Multiplication": false,
-        "GreaterThan": false,
-        "InstanceOf_": false,
-        "Minus": false,
-        "PublicVisibility": false,
-        "FunctionCallRemoval": false,
-        "Identical": false
+        "@default": true
     }
 }
