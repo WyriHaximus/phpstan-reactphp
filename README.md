@@ -17,7 +17,7 @@ composer require wyrihaximus/phpstan-react
 
 The rules in this package are automatically loaded by PHPStan when `phpstan/extension-installer` is installed.
 
-Include the rules file from the root of this package to have PHPStan check your code for blocking functions and event loop misuse:
+Include the rules file from the root of this package to have PHPStan check your code for blocking functions, event loop misuse, and react/async fiber misuse:
 
 ```neon
 includes:
@@ -280,6 +280,47 @@ Error identifiers use the prefix `wyrihaximus.reactphp.eventLoop.instance.`.
 PHPStan reports when you pass a value typed as `React\EventLoop\LoopInterface` into any call, for example `acceptLoop(Loop::get())` or `new Service($loop)`. Do not inject or forward the loop; use the static proxies on `Loop` at the call site that needs the event loop API.
 
 Error identifier: `wyrihaximus.reactphp.eventLoop.passLoopInterface`.
+
+
+# Async
+
+Every closure calling `React\Async\await` has to be wrapped in `React\Async\async` where that closure is
+defined. Wrapping a closure further up the call stack, or wrapping it after the fact, does not count: by the
+time the closure runs there is no guarantee it is still on the fiber the wrapping set up.
+
+The same goes for closures reaching `React\Async\await` through the methods and functions they call: the
+entire call stack starting in the closure runs on the fiber `React\Async\async` sets up, so every closure
+leading to an await needs that wrapping.
+
+See the [async documentation](https://reactphp.org/async/) and the [react/async](https://github.com/reactphp/async) package.
+
+## Await inside a non-async closure
+
+PHPStan reports when `React\Async\await` is called inside a closure that is not wrapped in `React\Async\async` at the
+point where that closure is defined.
+
+Error identifier: `wyrihaximus.reactphp.async.awaitWithoutAsync`.
+
+## Await reached through the call stack
+
+PHPStan reports when a non-async closure calls into code that eventually awaits, including through interfaces,
+static methods, functions, and constructors. The error tip points at the await site further down the stack.
+
+Error identifier: `wyrihaximus.reactphp.async.awaitReachedWithoutAsync`.
+
+## await
+
+Relevant package(s):
+
+ * [react/async](https://github.com/reactphp/async)
+
+Suggested replacement(s):
+
+ * React\Async\async
+
+Documentation:
+
+ * [https://reactphp.org/async/#async](https://reactphp.org/async/#async)
 
 
 # License
