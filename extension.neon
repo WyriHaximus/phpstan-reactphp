@@ -19,3 +19,7 @@ services:
     class: WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor
     tags:
       - phpstan.parser.richParserNodeVisitor
+  -
+    class: WyriHaximus\React\PHPStan\Rules\WrapAwaitingClosuresInAsyncRule
+    tags:
+      - phpstan.rules.rule
