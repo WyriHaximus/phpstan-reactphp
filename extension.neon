@@ -23,3 +23,11 @@ services:
     class: WyriHaximus\React\PHPStan\Rules\WrapAwaitingClosuresInAsyncRule
     tags:
       - phpstan.rules.rule
+  -
+    class: WyriHaximus\React\PHPStan\Rules\WrapClosuresReachingAwaitInAsyncRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: WyriHaximus\React\PHPStan\Collectors\AsyncCallGraphCollector
+    tags:
+      - phpstan.collector
