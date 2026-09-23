@@ -281,6 +281,12 @@ PHPStan reports when you pass a value typed as `React\EventLoop\LoopInterface` i
 
 Error identifier: `wyrihaximus.reactphp.eventLoop.passLoopInterface`.
 
+## LoopInterface properties
+
+PHPStan reports when a class or trait declares a property typed as `React\EventLoop\LoopInterface`, including constructor-promoted properties and `@var` annotations on untyped properties. Do not store the loop on the object; use the static proxies on `Loop` where the event loop API is needed.
+
+Error identifier: `wyrihaximus.reactphp.eventLoop.propertyLoopInterface`.
+
 
 # License
 
