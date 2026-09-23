@@ -11,5 +11,6 @@ parameters:
 		noExtends:
 			classesAllowedToBeExtended:
 				- PHPStan\Testing\RuleTestCase
+				- WyriHaximus\TestUtilities\TestCase
 includes:
 	- ../../extension.neon
