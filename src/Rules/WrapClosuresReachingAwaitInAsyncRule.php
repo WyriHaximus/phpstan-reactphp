@@ -10,6 +10,7 @@ use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use WyriHaximus\React\PHPStan\Collectors\AsyncCallGraphCollector;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 
 use function array_key_exists;
 use function array_shift;
@@ -30,6 +31,10 @@ final readonly class WrapClosuresReachingAwaitInAsyncRule implements Rule
 
     private const string IDENTIFIER = 'wyrihaximus.reactphp.async.awaitReachedWithoutAsync';
 
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     public function getNodeType(): string
     {
         return CollectedDataNode::class;
@@ -38,6 +43,10 @@ final readonly class WrapClosuresReachingAwaitInAsyncRule implements Rule
     /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
+        if (! $this->config->asyncAwaitReachableViaCallStack) {
+            return [];
+        }
+
         /** @var array<string, array{name: string, file: string, line: int}> $awaiting */
         $awaiting = [];
         $callees  = [];

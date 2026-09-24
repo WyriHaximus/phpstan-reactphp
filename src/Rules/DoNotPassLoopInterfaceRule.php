@@ -10,6 +10,7 @@ use PhpParser\Node\Expr\CallLike;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 use WyriHaximus\React\PHPStan\EventLoop\LoopInterfaceType;
 
 /**
@@ -19,6 +20,10 @@ use WyriHaximus\React\PHPStan\EventLoop\LoopInterfaceType;
  */
 final readonly class DoNotPassLoopInterfaceRule implements Rule
 {
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     private const string IDENTIFIER = 'wyrihaximus.reactphp.eventLoop.passLoopInterface';
     private const string MESSAGE    = 'Passing a React\EventLoop\LoopInterface instance is prohibited, use the static proxies on React\EventLoop\Loop from react/event-loop instead.';
     private const string TIP        = 'Please consult the documentation for more information: https://reactphp.org/event-loop/';
@@ -31,6 +36,10 @@ final readonly class DoNotPassLoopInterfaceRule implements Rule
     /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
+        if (! $this->config->passLoopInterface) {
+            return [];
+        }
+
         $errors = [];
 
         foreach ($node->getRawArgs() as $arg) {

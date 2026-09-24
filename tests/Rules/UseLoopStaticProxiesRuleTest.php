@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use WyriHaximus\React\PHPStan\Rules\UseLoopStaticProxiesRule;
 use WyriHaximus\React\PHPStan\Utils\ListLoopMethods;
 use WyriHaximus\React\PHPStan\Utils\LoopMethod;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function dirname;
 
@@ -26,7 +27,7 @@ final class UseLoopStaticProxiesRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new UseLoopStaticProxiesRule();
+        return new UseLoopStaticProxiesRule(EnabledRulesConfig::get());
     }
 
     /** @return iterable<array<LoopMethod>> */

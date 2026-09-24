@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use WyriHaximus\React\PHPStan\Rules\UseNonBlockingImplementationsRule;
 use WyriHaximus\React\PHPStan\Utils\Func;
 use WyriHaximus\React\PHPStan\Utils\ListFunctions;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function dirname;
 
@@ -21,7 +22,7 @@ final class UseNonBlockingImplementationsRuleTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new UseNonBlockingImplementationsRule();
+        return new UseNonBlockingImplementationsRule(EnabledRulesConfig::get());
     }
 
     /** @return iterable<array<Func>> */

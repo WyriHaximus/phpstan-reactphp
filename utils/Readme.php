@@ -22,10 +22,11 @@ use const PHP_EOL;
 
 final class Readme
 {
-    private const string HEADER_FUNCTIONS  = '# Functions';
-    private const string HEADER_EVENT_LOOP = '# Event loop';
-    private const string HEADER_ASYNC      = '# Async';
-    private const string HEADER_LICENSE    = '# License';
+    private const string HEADER_FUNCTIONS     = '# Functions';
+    private const string HEADER_EVENT_LOOP    = '# Event loop';
+    private const string HEADER_ASYNC         = '# Async';
+    private const string HEADER_CONFIGURATION = '# Configuration';
+    private const string HEADER_LICENSE       = '# License';
 
     private const string ASYNC_PACKAGE     = '[react/async](https://github.com/reactphp/async)';
     private const string ASYNC_REPLACEMENT = 'React\Async\async';
@@ -52,7 +53,17 @@ final class Readme
                 [$eventLoopBody] = explode(self::HEADER_ASYNC, $eventLoopBody, 2);
             }
 
+            if (str_contains($eventLoopBody, self::HEADER_CONFIGURATION)) {
+                [$eventLoopBody] = explode(self::HEADER_CONFIGURATION, $eventLoopBody, 2);
+            }
+
             $eventLoopBlock = PHP_EOL . PHP_EOL . self::HEADER_EVENT_LOOP . rtrim($eventLoopBody) . PHP_EOL;
+        }
+
+        $configurationBlock = '';
+        if (str_contains($middle, self::HEADER_CONFIGURATION)) {
+            [, $configurationBody] = explode(self::HEADER_CONFIGURATION, $middle, 2);
+            $configurationBlock    = PHP_EOL . PHP_EOL . self::HEADER_CONFIGURATION . rtrim($configurationBody) . PHP_EOL;
         }
 
         /** @phpstan-ignore wyrihaximus.reactphp.blocking.function.filePutContents */
@@ -65,6 +76,7 @@ final class Readme
             PHP_EOL,
             PHP_EOL,
             implode(PHP_EOL, [...self::formatAsync()]),
+            $configurationBlock,
             PHP_EOL,
             PHP_EOL,
             self::HEADER_LICENSE,

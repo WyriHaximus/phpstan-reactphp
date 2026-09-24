@@ -8,6 +8,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use WyriHaximus\React\PHPStan\EventLoop\LoopInterfacePropertyViolation;
 use WyriHaximus\React\PHPStan\Rules\DoNotDeclareLoopInterfaceTraitPropertyRule;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function dirname;
 
@@ -24,7 +25,7 @@ final class DoNotDeclareLoopInterfaceTraitPropertyRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new DoNotDeclareLoopInterfaceTraitPropertyRule();
+        return new DoNotDeclareLoopInterfaceTraitPropertyRule(EnabledRulesConfig::get());
     }
 
     public function testTraitDeclaringLoopInterfacePropertyIsReported(): void

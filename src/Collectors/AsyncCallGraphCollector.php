@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use WyriHaximus\React\PHPStan\Async\ReactAsync;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 use WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor;
 
 /**
@@ -21,6 +22,10 @@ use WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor;
  */
 final readonly class AsyncCallGraphCollector implements Collector
 {
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     public function getNodeType(): string
     {
         return Node\Expr\CallLike::class;
@@ -28,6 +33,10 @@ final readonly class AsyncCallGraphCollector implements Collector
 
     public function processNode(Node $node, Scope $scope): array|null
     {
+        if (! $this->config->asyncCallGraphEnabled) {
+            return null;
+        }
+
         if (
             $node instanceof Node\Expr\FuncCall
             && $node->name instanceof Node\Name\FullyQualified

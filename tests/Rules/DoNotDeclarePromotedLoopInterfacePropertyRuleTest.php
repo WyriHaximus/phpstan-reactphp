@@ -8,6 +8,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use WyriHaximus\React\PHPStan\EventLoop\LoopInterfacePropertyViolation;
 use WyriHaximus\React\PHPStan\Rules\DoNotDeclarePromotedLoopInterfacePropertyRule;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function dirname;
 
@@ -24,7 +25,7 @@ final class DoNotDeclarePromotedLoopInterfacePropertyRuleTest extends RuleTestCa
 
     protected function getRule(): Rule
     {
-        return new DoNotDeclarePromotedLoopInterfacePropertyRule();
+        return new DoNotDeclarePromotedLoopInterfacePropertyRule(EnabledRulesConfig::get());
     }
 
     public function testPromotedLoopInterfacePropertyIsReported(): void

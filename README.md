@@ -17,7 +17,7 @@ composer require wyrihaximus/phpstan-react
 
 The rules in this package are automatically loaded by PHPStan when `phpstan/extension-installer` is installed.
 
-Include the rules file from the root of this package to have PHPStan check your code for blocking functions, event loop misuse, and react/async fiber misuse:
+Include the rules file from the root of this package to have PHPStan check your code for blocking functions, event loop misuse, and react/async fiber misuse. Every rule is enabled by default; see [Configuration](#configuration) to turn rules off.
 
 ```neon
 includes:
@@ -327,6 +327,43 @@ Suggested replacement(s):
 Documentation:
 
  * [https://reactphp.org/async/#async](https://reactphp.org/async/#async)
+
+
+# Configuration
+
+All rules from this extension are **on by default**. Override them under `parameters.wyrihaximus.reactphp.rules` in your PHPStan config. Omitting the block keeps every rule enabled.
+
+| Parameter | Disables |
+|-----------|----------|
+| `blockingFunctions` | Blocking function diagnostics (`wyrihaximus.reactphp.blocking.function.*`) |
+| `loopStaticProxies` | `Loop::get()` method calls (`wyrihaximus.reactphp.eventLoop.staticProxy.*`) |
+| `loopInstances` | Loop instance method calls (`wyrihaximus.reactphp.eventLoop.instance.*`) |
+| `passLoopInterface` | Passing `LoopInterface` into calls (`passLoopInterface`) |
+| `loopInterfaceProperties` | Declaring `LoopInterface` properties (`propertyLoopInterface`) |
+| `asyncAwaitInClosure` | Direct `await` in non-async closures (`awaitWithoutAsync`) |
+| `asyncAwaitReachableViaCallStack` | Transitive await via the call stack (`awaitReachedWithoutAsync`) |
+
+For a single diagnostic, use [PHPStan ignoring errors](https://phpstan.org/user-guide/ignoring-errors) with the identifiers documented above.
+
+## Full configuration example
+
+```neon
+parameters:
+	level: max
+	paths:
+		- src
+		- tests
+	wyrihaximus:
+		reactphp:
+			rules:
+				blockingFunctions: true
+				loopStaticProxies: true
+				loopInstances: true
+				passLoopInterface: true
+				loopInterfaceProperties: true
+				asyncAwaitInClosure: true
+				asyncAwaitReachableViaCallStack: false
+```
 
 
 # License
