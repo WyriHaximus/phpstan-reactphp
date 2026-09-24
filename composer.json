@@ -24,7 +24,10 @@
     "psr-4": {
       "WyriHaximus\\React\\PHPStan\\Utils\\": "utils/",
       "WyriHaximus\\Tests\\React\\PHPStan\\": "tests/"
-    }
+    },
+    "classmap": [
+      "utils/data/async-call-chain/"
+    ]
   },
   "config": {
     "allow-plugins": {
