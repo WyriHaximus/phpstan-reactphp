@@ -9,7 +9,9 @@
   "require-dev": {
     "jawira/case-converter": "^3.6",
     "phpstan/phpdoc-parser": "^2.2.0",
+    "react/async": "^4.3",
     "react/event-loop": "^1.6",
+    "react/promise": "^3.3",
     "wyrihaximus/makefiles": "^0.14.8",
     "wyrihaximus/test-utilities": "^14.4.0"
   },
