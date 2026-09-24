@@ -8,6 +8,8 @@ final class HoldsNoLoopInterfaceProperty
 {
     private object $objectProperty;
 
+    private string|int $scalarUnion;
+
     public function __construct(LoopInterface $loop)
     {
     }
