@@ -8,8 +8,8 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\ObjectType;
 use WyriHaximus\React\PHPStan\EventLoop\LoopGet;
+use WyriHaximus\React\PHPStan\EventLoop\LoopInterfaceType;
 
 use function array_key_exists;
 
@@ -22,8 +22,7 @@ use function array_key_exists;
  */
 final readonly class DoNotUseLoopInstancesRule implements Rule
 {
-    private const string LOOP_INTERFACE = 'React\EventLoop\LoopInterface';
-    private const array METHOD_LIST     = [
+    private const array METHOD_LIST = [
         'addPeriodicTimer' => [
             'name' => 'addPeriodicTimer',
             'identifier' => 'wyrihaximus.reactphp.eventLoop.instance.addPeriodicTimer',
@@ -119,7 +118,7 @@ final readonly class DoNotUseLoopInstancesRule implements Rule
             return [];
         }
 
-        if (! (new ObjectType(self::LOOP_INTERFACE))->isSuperTypeOf($scope->getType($node->var))->yes()) {
+        if (! LoopInterfaceType::accepts($scope->getType($node->var))) {
             return [];
         }
 

@@ -16,6 +16,18 @@ services:
     tags:
       - phpstan.rules.rule
   -
+    class: WyriHaximus\React\PHPStan\Rules\DoNotDeclareLoopInterfacePropertyRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: WyriHaximus\React\PHPStan\Rules\DoNotDeclarePromotedLoopInterfacePropertyRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: WyriHaximus\React\PHPStan\Rules\DoNotDeclareLoopInterfaceTraitPropertyRule
+    tags:
+      - phpstan.rules.rule
+  -
     class: WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor
     tags:
       - phpstan.parser.richParserNodeVisitor

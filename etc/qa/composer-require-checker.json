@@ -10,7 +10,7 @@
     "PhpParser\\Node\\FunctionLike", "PhpParser\\Node\\Identifier", "PhpParser\\Node\\Name",
     "PhpParser\\Node\\Name\\FullyQualified",
     "PHPStan\\Analyser\\Scope", "PHPStan\\Collectors\\Collector", "PHPStan\\Node\\CollectedDataNode",
-    "PHPStan\\Rules\\Rule", "PHPStan\\Rules\\RuleErrorBuilder",
+    "PHPStan\\Rules\\IdentifierRuleError", "PHPStan\\Rules\\Rule", "PHPStan\\Rules\\RuleErrorBuilder",
     "PHPStan\\Type\\ObjectType", "PHPStan\\Type\\Type"
   ],
   "php-core-extensions" : [
