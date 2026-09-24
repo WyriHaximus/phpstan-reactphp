@@ -7,6 +7,7 @@ namespace WyriHaximus\Tests\React\PHPStan\Rules;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use WyriHaximus\React\PHPStan\Rules\DoNotPassLoopInterfaceRule;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function dirname;
 
@@ -26,7 +27,7 @@ final class DoNotPassLoopInterfaceRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new DoNotPassLoopInterfaceRule();
+        return new DoNotPassLoopInterfaceRule(EnabledRulesConfig::get());
     }
 
     public function testPassingLoopInterfaceIsReported(): void

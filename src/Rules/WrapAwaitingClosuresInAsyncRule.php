@@ -9,6 +9,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use WyriHaximus\React\PHPStan\Async\ReactAsync;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 use WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor;
 
 /**
@@ -23,6 +24,10 @@ final readonly class WrapAwaitingClosuresInAsyncRule implements Rule
 
     private const string IDENTIFIER = 'wyrihaximus.reactphp.async.awaitWithoutAsync';
 
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     public function getNodeType(): string
     {
         return Node\Expr\FuncCall::class;
@@ -31,6 +36,10 @@ final readonly class WrapAwaitingClosuresInAsyncRule implements Rule
     /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
+        if (! $this->config->asyncAwaitInClosure) {
+            return [];
+        }
+
         if (! ($node->name instanceof Node\Name\FullyQualified) || $node->name->toLowerString() !== ReactAsync::AWAIT) {
             return [];
         }

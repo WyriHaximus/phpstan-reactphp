@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 use WyriHaximus\React\PHPStan\EventLoop\LoopGet;
 use WyriHaximus\React\PHPStan\EventLoop\LoopInterfaceType;
 
@@ -22,6 +23,10 @@ use function array_key_exists;
  */
 final readonly class DoNotUseLoopInstancesRule implements Rule
 {
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     private const array METHOD_LIST = [
         'addPeriodicTimer' => [
             'name' => 'addPeriodicTimer',
@@ -105,6 +110,10 @@ final readonly class DoNotUseLoopInstancesRule implements Rule
     /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
+        if (! $this->config->loopInstances) {
+            return [];
+        }
+
         if (! $node->name instanceof Node\Identifier) {
             return [];
         }

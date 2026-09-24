@@ -9,7 +9,9 @@ use PhpParser\NodeFinder;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 use WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 use WyriHaximus\TestUtilities\TestCase;
 
 final class AsyncWrappedClosureVisitorTest extends TestCase
@@ -44,7 +46,7 @@ final class AsyncWrappedClosureVisitorTest extends TestCase
         $parser    = new ParserFactory()->createForNewestSupportedVersion();
         $traverser = new NodeTraverser();
         $traverser->addVisitor(new NameResolver());
-        $traverser->addVisitor(new AsyncWrappedClosureVisitor());
+        $traverser->addVisitor(new AsyncWrappedClosureVisitor(EnabledRulesConfig::get()));
 
         // The visitor gets reused for every file PHPStan parses, hence traversing more than once.
         for ($iteration = 0; $iteration < 2; $iteration++) {
@@ -66,6 +68,35 @@ final class AsyncWrappedClosureVisitorTest extends TestCase
                 ],
                 self::enclosingClosures(...$ast),
             );
+        }
+    }
+
+    public function testAsyncParserDisabledWhenAsyncRulesOff(): void
+    {
+        $parser    = new ParserFactory()->createForNewestSupportedVersion();
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new NameResolver());
+        $traverser->addVisitor(new AsyncWrappedClosureVisitor(new RulesConfig(
+            blockingFunctions: true,
+            loopStaticProxies: true,
+            loopInstances: true,
+            passLoopInterface: true,
+            loopInterfaceProperties: true,
+            asyncAwaitInClosure: false,
+            asyncAwaitReachableViaCallStack: false,
+        )));
+
+        $ast = $parser->parse(self::CODE);
+        self::assertNotNull($ast);
+
+        $traverser->traverse($ast);
+
+        foreach (new NodeFinder()->findInstanceOf($ast, Node\Expr\FuncCall::class) as $funcCall) {
+            if (! ($funcCall->name instanceof Node\Name) || $funcCall->name->toLowerString() !== 'react\async\await') {
+                continue;
+            }
+
+            self::assertNull($funcCall->getAttribute(AsyncWrappedClosureVisitor::ATTRIBUTE_ENCLOSING_CLOSURE));
         }
     }
 

@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 use WyriHaximus\React\PHPStan\EventLoop\LoopInterfacePropertyViolation;
 
 /**
@@ -17,6 +18,10 @@ use WyriHaximus\React\PHPStan\EventLoop\LoopInterfacePropertyViolation;
  */
 final readonly class DoNotDeclarePromotedLoopInterfacePropertyRule implements Rule
 {
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     public function getNodeType(): string
     {
         return ClassMethod::class;
@@ -25,6 +30,10 @@ final readonly class DoNotDeclarePromotedLoopInterfacePropertyRule implements Ru
     /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
+        if (! $this->config->loopInterfaceProperties) {
+            return [];
+        }
+
         if ($node->name->toLowerString() === '__construct') {
             return LoopInterfacePropertyViolation::forPromotedConstructor($node, $scope);
         }

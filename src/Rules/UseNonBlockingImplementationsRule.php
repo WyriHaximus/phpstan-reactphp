@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 
 use function array_key_exists;
 
@@ -18,6 +19,10 @@ use function array_key_exists;
  */
 final readonly class UseNonBlockingImplementationsRule implements Rule
 {
+    public function __construct(private RulesConfig $config)
+    {
+    }
+
     private const array FUNCTION_LIST = [
         'fclose' => [
             'name' => 'fclose',
@@ -125,6 +130,10 @@ final readonly class UseNonBlockingImplementationsRule implements Rule
     /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
+        if (! $this->config->blockingFunctions) {
+            return [];
+        }
+
         if (! $node->name instanceof Node\Name) {
             return [];
         }

@@ -8,6 +8,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use WyriHaximus\React\PHPStan\Rules\WrapAwaitingClosuresInAsyncRule;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function array_map;
 use function dirname;
@@ -25,7 +26,7 @@ final class WrapAwaitingClosuresInAsyncRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new WrapAwaitingClosuresInAsyncRule();
+        return new WrapAwaitingClosuresInAsyncRule(EnabledRulesConfig::get());
     }
 
     /** @return iterable<string, array{string, list<int>}> */

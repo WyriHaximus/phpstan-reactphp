@@ -11,6 +11,7 @@ use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use WyriHaximus\React\PHPStan\Collectors\AsyncCallGraphCollector;
 use WyriHaximus\React\PHPStan\Rules\WrapClosuresReachingAwaitInAsyncRule;
+use WyriHaximus\Tests\React\PHPStan\Support\EnabledRulesConfig;
 
 use function dirname;
 use function glob;
@@ -31,13 +32,13 @@ final class WrapClosuresReachingAwaitInAsyncRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new WrapClosuresReachingAwaitInAsyncRule();
+        return new WrapClosuresReachingAwaitInAsyncRule(EnabledRulesConfig::get());
     }
 
     /** @return list<Collector<Node, mixed>> */
     protected function getCollectors(): array
     {
-        return [new AsyncCallGraphCollector()];
+        return [new AsyncCallGraphCollector(EnabledRulesConfig::get())];
     }
 
     /** @return iterable<string, array{string, list<array{0: string, 1: int, 2: string}>}> */

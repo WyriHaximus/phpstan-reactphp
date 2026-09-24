@@ -7,6 +7,7 @@ namespace WyriHaximus\React\PHPStan\Parser;
 use PhpParser\Node;
 use PhpParser\NodeVisitor;
 use WyriHaximus\React\PHPStan\Async\ReactAsync;
+use WyriHaximus\React\PHPStan\Config\RulesConfig;
 
 use function array_pop;
 use function count;
@@ -34,6 +35,10 @@ final class AsyncWrappedClosureVisitor implements NodeVisitor
      */
     private array $functionLikes = [];
 
+    public function __construct(private readonly RulesConfig $config)
+    {
+    }
+
     /** @inheritDoc */
     public function beforeTraverse(array $nodes): null
     {
@@ -44,6 +49,10 @@ final class AsyncWrappedClosureVisitor implements NodeVisitor
 
     public function enterNode(Node $node): null
     {
+        if (! $this->config->asyncParserEnabled) {
+            return null;
+        }
+
         if ($node instanceof Node\Expr\FuncCall) {
             $this->markClosuresWrappedInAsync($node);
         }
