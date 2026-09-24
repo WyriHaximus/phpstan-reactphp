@@ -15,3 +15,7 @@ services:
     class: WyriHaximus\React\PHPStan\Rules\DoNotPassLoopInterfaceRule
     tags:
       - phpstan.rules.rule
+  -
+    class: WyriHaximus\React\PHPStan\Parser\AsyncWrappedClosureVisitor
+    tags:
+      - phpstan.parser.richParserNodeVisitor
