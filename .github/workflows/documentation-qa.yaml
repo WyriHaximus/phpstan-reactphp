@@ -1,0 +1,31 @@
+name: Documentation QA
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - '**.md'
+      - .github/workflows/documentation-qa.yaml
+      - etc/qa/documentation.markdownlint-cli2.yaml
+      - etc/qa/**
+      - etc/qa/lychee.toml
+      - etc/Makefile
+  pull_request:
+    paths:
+      - '**.md'
+      - .github/workflows/documentation-qa.yaml
+      - etc/qa/documentation.markdownlint-cli2.yaml
+      - etc/qa/**
+      - etc/qa/lychee.toml
+      - etc/Makefile
+permissions:
+  contents: read
+jobs:
+  documentation-qa:
+    name: Documentation QA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run documentation QA (Profile G)
+        run: make documentation-qa
