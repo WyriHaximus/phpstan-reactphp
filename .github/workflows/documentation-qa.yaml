@@ -1,0 +1,33 @@
+name: Documentation QA
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - '**.md'
+      - etc/qa/documentation.markdownlint-cli2.yaml
+      - etc/qa/**
+      - etc/ci/linkspector.options.yml
+      - etc/Makefile
+      - utils/documentation-qa.php
+      - utils/DocumentationQa.php
+  pull_request:
+    paths:
+      - '**.md'
+      - etc/qa/documentation.markdownlint-cli2.yaml
+      - etc/qa/**
+      - etc/ci/linkspector.options.yml
+      - etc/Makefile
+      - utils/documentation-qa.php
+      - utils/DocumentationQa.php
+permissions:
+  contents: read
+jobs:
+  documentation-qa:
+    name: Documentation QA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run documentation QA (Profile G)
+        run: make documentation-qa

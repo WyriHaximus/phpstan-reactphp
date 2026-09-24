@@ -1,0 +1,7 @@
+useGitIgnore: true
+timeout: 60000
+httpHeaders:
+  - url:
+      - https://docs.github.com/
+    headers:
+      Accept-Encoding: zstd, br, gzip, deflate
