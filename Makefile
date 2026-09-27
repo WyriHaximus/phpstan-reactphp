@@ -17,7 +17,7 @@ OTEL_PHP_FIBERS_ENABLED?=true
 NEEDS_DOCKER_SOCKET=FALSE
 HAS_EXTRA_SERVICES=FALSE
 ALL_HAS_DIRECT_DOCKER_TASKS=FALSE
-CONTRIB_HAS_DIRECT_DOCKER_TASKS=FALSE
+CONTRIB_HAS_DIRECT_DOCKER_TASKS=TRUE
 ON_INSTALL_OR_UPDATE_HAS_DIRECT_DOCKER_TASKS=FALSE
 PHP_VERSION="8.4"
 CONTAINER_NAME=$(shell echo "${CONTAINER_REGISTRY_REPO}:${PHP_VERSION}-${NTS_OR_ZTS_DOCKER_IMAGE}-alpine${SLIM_DOCKER_IMAGE}-dev")
@@ -111,7 +111,7 @@ else
 	$(DOCKER_RUN_WITH_SOCKET) make contrib-raw
 endif
 contrib-raw: ## The real runs everything, but due to sponge it has to be ran inside DOCKER_RUN ##U##
-	$(MAKE) cs-fix cs unit-testing composer-require-checker composer-unused ## Count: 5
+	$(MAKE) documentation-qa cs-fix cs unit-testing composer-require-checker composer-unused ## Count: 6
 
 
 ## Temporary set of migrations to get all my repos in shape
@@ -445,6 +445,35 @@ migrations-git-enforce-agents-md-contents: #### Enforce `AGENTS.md` contents ##*
 
 
 ## Our default jobs
+# Documentation QA (Profile G): pinned Docker tool images on host.
+
+DOCUMENTATION_MOUNT := -v "`pwd`:`pwd`" -w "`pwd`"
+DOCUMENTATION_SECURITY := --cap-drop=ALL --security-opt="no-new-privileges=true" --user="`id -u`:`id -g`"
+IMAGE_TYPOS := andreyfomin/typos@sha256:8343befcb7c90485986ba8dfc0b8a69a9404a583b5dac14bff827fa7efe62e22
+IMAGE_MARKDOWNLINT := davidanson/markdownlint-cli2:v0.17.2
+IMAGE_VALE := jdkato/vale:v3.23.0@sha256:d87d6355dc8992f92ec39c4c862a388e56e30302a771fd4512c02660fb25cdf3
+IMAGE_LYCHEE := lycheeverse/lychee:0.24.2-alpine@sha256:2255c0b916cc8fc4193f59a4549358a6bae0f7d4ea16b5e1dd4c3b2733c35504
+
+documentation-qa: #### Run all documentation checks (typos, markdownlint, Vale, links) ##*E*##
+	$(MAKE) documentation-typos documentation-markdownlint documentation-vale documentation-links
+
+documentation-typos: #### Spell-check documentation ####
+	docker run --rm -i $(DOCUMENTATION_SECURITY) $(DOCUMENTATION_MOUNT) $(IMAGE_TYPOS) --config etc/qa/typos.toml README.md AGENTS.md CONTRIBUTING.md
+
+documentation-markdownlint: #### Lint markdown structure ####
+	docker run --rm -i $(DOCUMENTATION_SECURITY) $(DOCUMENTATION_MOUNT) $(IMAGE_MARKDOWNLINT) --config etc/qa/documentation.markdownlint-cli2.yaml
+
+documentation-vale-sync: #### Download Vale style packages ####
+	docker run --rm -i $(DOCUMENTATION_SECURITY) $(DOCUMENTATION_MOUNT) $(IMAGE_VALE) sync --config=etc/qa/vale.ini
+
+DOCUMENTATION_VALE_FILES := README.md AGENTS.md CONTRIBUTING.md $(shell find etc/ai -name '*.md' 2>/dev/null)
+
+documentation-vale: documentation-vale-sync #### Prose lint (write-good, inclusivity, Diataxis) ####
+	docker run --rm -i $(DOCUMENTATION_SECURITY) $(DOCUMENTATION_MOUNT) $(IMAGE_VALE) --config=etc/qa/vale.ini --no-global $(DOCUMENTATION_VALE_FILES)
+
+documentation-links: #### Check documentation links ####
+	docker run --rm -i $(DOCUMENTATION_SECURITY) $(DOCUMENTATION_MOUNT) $(IMAGE_LYCHEE) --config etc/qa/lychee.toml .
+
 update-phpstan-extension: ## Update rules ##*I*##
 	$(DOCKER_RUN) php utils/update.php
 
@@ -584,6 +613,12 @@ help: ## Show this help ####
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs' 'Check the code for code style issues'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs-fix' 'Fix any automatically fixable code style issues'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs-fix-debug' 'Fix any automatically fixable code style issues, but with debugging output'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-links' 'Check documentation links'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-markdownlint' 'Lint markdown structure'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-qa' 'Run all documentation checks (typos, markdownlint, Vale, links)'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-typos' 'Spell-check documentation'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-vale' 'Prose lint (write-good, inclusivity, Diataxis)'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-vale-sync' 'Download Vale style packages'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'help' 'Show this help'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'help-contrib' 'Show the migrations help'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'help-migrations' 'Show the migrations help'
@@ -744,6 +779,7 @@ help-contrib: ## Show the migrations help ####
 	@printf "  \033[32m%-32s\033[0m %s\n" 'composer-unused' 'Ensure we don'\''t require any package we don'\''t use in this package directly'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs' 'Check the code for code style issues'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs-fix' 'Fix any automatically fixable code style issues'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'documentation-qa' 'Run all documentation checks (typos, markdownlint, Vale, links)'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'unit-testing' 'Run tests'
 
 task-list-ci:

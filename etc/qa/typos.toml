@@ -1,0 +1,15 @@
+[type.md]
+extend-glob = ["*.md"]
+
+[default]
+extend-ignore-re = [
+    "ReactPHP",
+    "PHPStan",
+    "wyrihaximus",
+    "ShipMonk",
+    "LoopInterface",
+    "readme-ov-file",
+]
+
+[files]
+extend-exclude = ["var/**", "vendor/**"]
