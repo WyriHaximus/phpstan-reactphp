@@ -22,11 +22,11 @@ use const PHP_EOL;
 
 final class Readme
 {
-    private const string HEADER_FUNCTIONS     = '# Functions';
-    private const string HEADER_EVENT_LOOP    = '# Event loop';
-    private const string HEADER_ASYNC         = '# Async';
-    private const string HEADER_CONFIGURATION = '# Configuration';
-    private const string HEADER_LICENSE       = '# License';
+    private const string HEADER_FUNCTIONS    = '## Functions:';
+    private const string HEADER_EVENT_LOOP   = '## Event loop:';
+    private const string HEADER_ASYNC        = '## Async:';
+    private const string HEADER_CONTRIBUTING = '## Contributing:';
+    private const string HEADER_LICENSE      = '# License';
 
     private const string ASYNC_PACKAGE     = '[react/async](https://github.com/reactphp/async)';
     private const string ASYNC_REPLACEMENT = 'React\Async\async';
@@ -53,17 +53,18 @@ final class Readme
                 [$eventLoopBody] = explode(self::HEADER_ASYNC, $eventLoopBody, 2);
             }
 
-            if (str_contains($eventLoopBody, self::HEADER_CONFIGURATION)) {
-                [$eventLoopBody] = explode(self::HEADER_CONFIGURATION, $eventLoopBody, 2);
+            if (str_contains($eventLoopBody, self::HEADER_CONTRIBUTING)) {
+                [$eventLoopBody] = explode(self::HEADER_CONTRIBUTING, $eventLoopBody, 2);
             }
 
             $eventLoopBlock = PHP_EOL . PHP_EOL . self::HEADER_EVENT_LOOP . rtrim($eventLoopBody) . PHP_EOL;
         }
 
-        $configurationBlock = '';
-        if (str_contains($middle, self::HEADER_CONFIGURATION)) {
-            [, $configurationBody] = explode(self::HEADER_CONFIGURATION, $middle, 2);
-            $configurationBlock    = PHP_EOL . PHP_EOL . self::HEADER_CONFIGURATION . rtrim($configurationBody) . PHP_EOL;
+        $contributingBlock = '';
+        if (str_contains($afterFunctionListMarker, self::HEADER_CONTRIBUTING)) {
+            [$beforeLicense]      = explode(self::HEADER_LICENSE, $afterFunctionListMarker, 2);
+            [, $contributingBody] = explode(self::HEADER_CONTRIBUTING, $beforeLicense, 2);
+            $contributingBlock    = PHP_EOL . PHP_EOL . self::HEADER_CONTRIBUTING . rtrim($contributingBody) . PHP_EOL;
         }
 
         /** @phpstan-ignore wyrihaximus.reactphp.blocking.function.filePutContents */
@@ -76,7 +77,7 @@ final class Readme
             PHP_EOL,
             PHP_EOL,
             implode(PHP_EOL, [...self::formatAsync()]),
-            $configurationBlock,
+            $contributingBlock,
             PHP_EOL,
             PHP_EOL,
             self::HEADER_LICENSE,
@@ -109,21 +110,24 @@ final class Readme
         yield '';
         yield 'See the [async documentation](https://reactphp.org/async/) and the [react/async](https://github.com/reactphp/async) package.';
         yield '';
-        yield '## Await inside a non-async closure';
+        yield '> [!NOTE]';
+        yield '> Analyze the whole codebase (src and tests) so call-graph rules see real paths into `await`.';
+        yield '';
+        yield '### Await inside a non-async closure';
         yield '';
         yield 'PHPStan reports when `React\Async\await` is called inside a closure that is not wrapped in `React\Async\async` at the';
         yield 'point where that closure is defined.';
         yield '';
         yield 'Error identifier: `' . self::IDENTIFIER_AWAIT_WITHOUT_ASYNC . '`.';
         yield '';
-        yield '## Await reached through the call stack';
+        yield '### Await reached through the call stack';
         yield '';
         yield 'PHPStan reports when a non-async closure calls into code that eventually awaits, including through interfaces,';
         yield 'static methods, functions, and constructors. The error tip points at the await site further down the stack.';
         yield '';
         yield 'Error identifier: `' . self::IDENTIFIER_AWAIT_REACHED_WITHOUT_ASYNC . '`.';
         yield '';
-        yield '## await';
+        yield '### await';
         yield '';
 
         yield from self::formatDetails([self::ASYNC_PACKAGE], [self::ASYNC_REPLACEMENT], [self::ASYNC_URL]);

@@ -49,4 +49,13 @@ final class DoNotDeclareLoopInterfacePropertyRuleTest extends RuleTestCase
             dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'utils' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'loop-edge-cases' . DIRECTORY_SEPARATOR . 'property-loop-not-reported.php',
         ], []);
     }
+
+    public function testBareLoopInterfaceTypeNameIsReported(): void
+    {
+        $this->analyse([
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'utils' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'loop-edge-cases' . DIRECTORY_SEPARATOR . 'property-loop-bare-name-reported.php',
+        ], [
+            [LoopInterfacePropertyViolation::MESSAGE, 11, LoopInterfacePropertyViolation::TIP],
+        ]);
+    }
 }

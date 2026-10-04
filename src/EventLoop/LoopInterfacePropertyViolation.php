@@ -120,11 +120,7 @@ final readonly class LoopInterfacePropertyViolation
                     return true;
                 }
             }
-
-            return false;
-        }
-
-        if ($typeNode instanceof Name) {
+        } elseif ($typeNode instanceof Name) {
             $lower = $typeNode->toLowerString();
 
             return $lower === 'react\eventloop\loopinterface' || $lower === 'loopinterface';
